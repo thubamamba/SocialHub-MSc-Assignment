@@ -6,7 +6,7 @@
  * @param array $additionalCSS - Array of additional CSS files to include
  * @param array $additionalJS - Array of additional JS files to include
  */
-function renderHeader($pageTitle = 'SocialHub - Connect with Friends', $currentPage = 'home', $additionalCSS = [], $additionalJS = []) {
+function renderHeader($pageTitle = 'SynCNet - Connect with Friends', $currentPage = 'home', $additionalCSS = [], $additionalJS = []) {
     $currentUser = getCurrentUser($GLOBALS['pdo']);
     ?>
     <!DOCTYPE html>
@@ -35,9 +35,9 @@ function renderHeader($pageTitle = 'SocialHub - Connect with Friends', $currentP
         <?php endforeach; ?>
 
         <!-- Meta tags for SEO -->
-        <meta name="description" content="SocialHub - Connect, share, and explore with friends from around the world.">
+        <meta name="description" content="SynCNet - Connect, share, and explore with friends from around the world.">
         <meta name="keywords" content="social media, connect, share, friends, community">
-        <meta name="author" content="SocialHub">
+        <meta name="author" content="SynCNet">
 
         <!-- Open Graph tags -->
         <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
@@ -51,7 +51,7 @@ function renderHeader($pageTitle = 'SocialHub - Connect with Friends', $currentP
     <nav class="navbar navbar-expand-lg fixed-top" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <i class="fas fa-share-alt"></i> SocialHub
+                <i class="fas fa-share-alt"></i> SynCNet
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - SocialHub</title>
+    <title>Register - SynCNet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">    <style>
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="text-center mb-4">
                         <a href="index.php" class="text-decoration-none">
                             <h2 class="text-blue">
-                                <i class="fas fa-share-alt text-yellow"></i> SocialHub
+                                <i class="fas fa-share-alt text-yellow"></i> SynCNet
                             </h2>
                         </a>
                         <p class="text-muted">Create your account and join the community</p>

@@ -9,7 +9,7 @@ function renderCommonModals() {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Login to SocialHub</h5>
+                    <h5 class="modal-title">Login to SynCNet</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST">
@@ -81,7 +81,7 @@ function renderFooter($additionalJS = []) {
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-share-alt"></i> SocialHub</h5>
+                    <h5><i class="fas fa-share-alt"></i> SynCNet</h5>
                     <p class="text-body-secondary">Connect, share, and explore with friends from around the world.</p>
                     <div class="social-links">
                         <a href="#" class="text-body-secondary me-3"><i class="fab fa-facebook-f"></i></a>
@@ -130,7 +130,7 @@ function renderFooter($additionalJS = []) {
             <hr class="my-4">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="text-body-secondary mb-0">&copy; <?php echo date('Y'); ?> SocialHub. All rights reserved.</p>
+                    <p class="text-body-secondary mb-0">&copy; <?php echo date('Y'); ?> SynCNet. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="btn-group btn-group-sm" role="group">
@@ -165,7 +165,7 @@ function renderFooter($additionalJS = []) {
 /**
  * Quick helper function to include both header and handle session messages
  */
-function startPage($pageTitle = 'SocialHub', $currentPage = 'home', $additionalCSS = [], $additionalJS = []) {
+function startPage($pageTitle = 'SynCNet', $currentPage = 'home', $additionalCSS = [], $additionalJS = []) {
     renderHeader($pageTitle, $currentPage, $additionalCSS);
     echo '<div class="container-fluid mt-5 pt-4">';
     renderSessionMessages();

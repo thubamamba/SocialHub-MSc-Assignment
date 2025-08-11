@@ -69,7 +69,7 @@ $posts = $stmt->fetchAll();
 
 $currentUser = getCurrentUser($pdo);
 
-startPage('SocialHub - Connect with Friends', 'home');
+startPage('SynCNet - Connect with Friends', 'home');
 ?>
 
 <!-- Main Content -->
@@ -141,7 +141,7 @@ startPage('SocialHub - Connect with Friends', 'home');
                     <div class="carousel-item active">
                         <img src="assets/images/connect2.jpg" class="d-block w-100" alt="Connect with Friends">
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>Welcome to SocialHub</h5>
+                            <h5>Welcome to SynCNet</h5>
                             <p>Connect, share, and explore with friends from around the world.</p>
                         </div>
                     </div>

@@ -28,7 +28,7 @@ if (!$profile_user) {
 $is_own_profile = isLoggedIn() && $_SESSION['user_id'] == $user_id;
 
 // Custom page title
-$pageTitle = htmlspecialchars($profile_user['username']) . '\'s Profile - SocialHub';
+$pageTitle = htmlspecialchars($profile_user['username']) . '\'s Profile - SynCNet';
 
 // Get user's posts
 $stmt = $pdo->prepare("
@@ -133,7 +133,7 @@ startPage($pageTitle, 'profile');
 
                     <div class="activity-item">
                         <i class="fas fa-user-plus text-success"></i>
-                        <span class="small">Joined SocialHub <?php echo formatDate($profile_user['created_at']); ?></span>
+                        <span class="small">Joined SynCNet <?php echo formatDate($profile_user['created_at']); ?></span>
                     </div>
                 </div>
             </div>
