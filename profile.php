@@ -3,6 +3,9 @@ require_once 'config/config.php';
 require_once 'includes/header.php';
 require_once 'includes/footer.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Get user ID from URL
 $user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -238,31 +241,37 @@ startPage($pageTitle, 'profile');
                                     $stmt->execute([$post['id']]);
                                     $comments = $stmt->fetchAll();
 
-                                    foreach ($comments as $comment):
-                                        ?>
-                                        <div class="comment mb-2" data-comment-id="<?php echo $comment['id']; ?>">
-                                            <div class="d-flex">
-                                                <img src="assets/uploads/<?php echo htmlspecialchars($comment['profile_picture']); ?>"
-                                                     alt="Profile" class="profile-img-tiny me-2">
-                                                <div class="flex-grow-1">
-                                                    <div class="comment-content">
-                                                        <strong>
-                                                            <a href="profile.php?id=<?php echo $comment['user_id']; ?>" class="text-decoration-none">
-                                                                <?php echo htmlspecialchars($comment['username']); ?>
-                                                            </a>
-                                                        </strong>
-                                                        <?php echo htmlspecialchars($comment['content']); ?>
+                                    if (empty($comments)): ?>
+                                        <div class="no-comments text-muted text-center py-3">
+                                            <i class="fas fa-comment-slash me-2"></i>
+                                            No comments yet. Be the first to comment!
+                                        </div>
+                                    <?php else: ?>
+                                        <?php foreach ($comments as $comment): ?>
+                                            <div class="comment mb-2" data-comment-id="<?php echo $comment['id']; ?>">
+                                                <div class="d-flex">
+                                                    <img src="assets/uploads/<?php echo htmlspecialchars($comment['profile_picture']); ?>"
+                                                         alt="Profile" class="profile-img-tiny me-2">
+                                                    <div class="flex-grow-1">
+                                                        <div class="comment-content">
+                                                            <strong>
+                                                                <a href="profile.php?id=<?php echo $comment['user_id']; ?>" class="text-decoration-none">
+                                                                    <?php echo htmlspecialchars($comment['username']); ?>
+                                                                </a>
+                                                            </strong>
+                                                            <?php echo htmlspecialchars($comment['content']); ?>
+                                                        </div>
+                                                        <small class="text-muted"><?php echo formatDate($comment['created_at']); ?></small>
+                                                        <?php if (isLoggedIn() && ($_SESSION['user_level'] == 2 || $_SESSION['user_id'] == $comment['user_id'])): ?>
+                                                            <button class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="deleteComment(<?php echo $comment['id']; ?>)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        <?php endif; ?>
                                                     </div>
-                                                    <small class="text-muted"><?php echo formatDate($comment['created_at']); ?></small>
-                                                    <?php if (isLoggedIn() && ($_SESSION['user_level'] == 2 || $_SESSION['user_id'] == $comment['user_id'])): ?>
-                                                        <button class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="deleteComment(<?php echo $comment['id']; ?>)">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    <?php endif; ?>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
 
                                 <?php if (isLoggedIn()): ?>

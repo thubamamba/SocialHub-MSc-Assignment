@@ -1,6 +1,9 @@
 <?php
 require_once 'config/config.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Check if user is logged in
 if (!isLoggedIn()) {
     header('Location: index.php');
@@ -126,22 +129,7 @@ function resizeProfilePicture($file_path, $size) {
     $type = $image_info[2];
 
     // Create source image
-    switch ($type) {
-        case IMAGETYPE_JPEG:
-            $source = imagecreatefromjpeg($file_path);
-            break;
-        case IMAGETYPE_PNG:
-            $source = imagecreatefrompng($file_path);
-            break;
-        case IMAGETYPE_GIF:
-            $source = imagecreatefromgif($file_path);
-            break;
-        case IMAGETYPE_WEBP:
-            $source = imagecreatefromwebp($file_path);
-            break;
-        default:
-            return false;
-    }
+    $source = createImageFromType($type, $file_path);
 
     if (!$source) {
         return false;
@@ -189,4 +177,3 @@ function resizeProfilePicture($file_path, $size) {
 
     return $result;
 }
-?>

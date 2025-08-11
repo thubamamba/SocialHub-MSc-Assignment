@@ -1,5 +1,3 @@
-// Enhanced JavaScript with Theme Toggle and Improved Functionality
-
 // Theme Management
 let currentTheme = 'light';
 
@@ -8,11 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize theme
     initializeTheme();
 
+    // Initialization to attach the event listener for the search form
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm) {
+        searchForm.addEventListener('submit', searchUsers);
+    }
+
     // Initialize tooltips and popovers
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    // const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    // const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    //     return new bootstrap.Tooltip(tooltipTriggerEl);
+    // });
 
     // Auto-hide alerts after 5 seconds
     setTimeout(function() {
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Aade-in animation to cards
+    // Fade-in animation to cards
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
         setTimeout(() => {
@@ -49,8 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Theme Management Functions
 function initializeTheme() {
     // Get saved theme from session storage (using a simple cookie fallback)
-    const savedTheme = getCookie('theme') || 'light';
-    currentTheme = savedTheme;
+    currentTheme = getCookie('theme') || 'light';
 
     // Apply theme
     document.documentElement.setAttribute('data-bs-theme', currentTheme);
@@ -400,7 +403,6 @@ async function deletePost(postId) {
     }
 }
 
-// Enhanced Search Users Function
 async function searchUsers(event) {
     event.preventDefault();
 
@@ -460,7 +462,7 @@ function displaySearchResults(users, query) {
             </div>
         `;
     } else {
-        const resultsHTML = users.map(user => `
+        searchResults.innerHTML = users.map(user => `
             <div class="search-user-item d-flex align-items-center p-3" onclick="window.location.href='profile.php?id=${user.id}'" role="button">
                 <img src="assets/uploads/${user.profile_picture}" 
                      alt="Profile" class="profile-img-tiny me-3"
@@ -468,13 +470,11 @@ function displaySearchResults(users, query) {
                 <div class="flex-grow-1">
                     <div class="fw-bold">${user.username}</div>
                     <div class="text-muted small">${user.bio || 'No bio available'}</div>
-                    <small class="badge bg-${user.user_level == 2 ? 'warning' : 'primary'}">${user.user_type}</small>
+                    <small class="badge bg-${user.user_level === 2 ? 'warning' : 'primary'}">${user.user_type}</small>
                 </div>
                 <i class="fas fa-chevron-right text-muted"></i>
             </div>
         `).join('');
-
-        searchResults.innerHTML = resultsHTML;
     }
 
     searchModal.show();
@@ -513,29 +513,6 @@ function previewImage(input, previewId) {
 
         reader.readAsDataURL(file);
     }
-}
-
-// Enhanced Form Validation
-function validateForm(formId) {
-    const form = document.getElementById(formId);
-    if (!form) return false;
-
-    const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
-    let isValid = true;
-
-    inputs.forEach(input => {
-        const value = input.value.trim();
-
-        if (!value) {
-            input.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            input.classList.remove('is-invalid');
-            input.classList.add('is-valid');
-        }
-    });
-
-    return isValid;
 }
 
 // Enhanced Password Strength Checker
@@ -647,40 +624,6 @@ async function copyToClipboard(text) {
     } catch (err) {
         console.error('Failed to copy: ', err);
         showAlert('Failed to copy link', 'danger');
-    }
-}
-
-// Format numbers (e.g., 1234 becomes 1.2K)
-function formatNumber(num) {
-    if (num >= 1000000) {
-        return (num / 1000000).toFixed(1) + 'M';
-    } else if (num >= 1000) {
-        return (num / 1000).toFixed(1) + 'K';
-    }
-    return num.toString();
-}
-
-// Time ago function
-function timeAgo(date) {
-    const now = new Date();
-    const time = new Date(date);
-    const diff = now - time;
-
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 7) {
-        return time.toLocaleDateString();
-    } else if (days > 0) {
-        return `${days}d ago`;
-    } else if (hours > 0) {
-        return `${hours}h ago`;
-    } else if (minutes > 0) {
-        return `${minutes}m ago`;
-    } else {
-        return 'Just now';
     }
 }
 

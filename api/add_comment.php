@@ -1,6 +1,9 @@
 <?php
 require_once '../config/config.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Set content type to JSON
 header('Content-Type: application/json');
 
@@ -85,4 +88,3 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Failed to add comment']);
 }
-?>

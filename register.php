@@ -1,6 +1,9 @@
 <?php
 require_once 'config/config.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Redirect if already logged in
 if (isLoggedIn()) {
     header('Location: index.php');
@@ -147,6 +150,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 0 auto;
             display: block;
         }
+
+        .text-yellow {
+            color: #ffd43b;
+        }
+
+        .text-blue {
+            color: #6ea8fe;
+        }
     </style>
 </head>
 <body>
@@ -157,8 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="register-card p-5">
                     <div class="text-center mb-4">
                         <a href="index.php" class="text-decoration-none">
-                            <h2 class="text-primary">
-                                <i class="fas fa-share-alt"></i> SocialHub
+                            <h2 class="text-blue">
+                                <i class="fas fa-share-alt text-yellow"></i> SocialHub
                             </h2>
                         </a>
                         <p class="text-muted">Create your account and join the community</p>

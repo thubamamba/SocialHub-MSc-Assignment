@@ -1,6 +1,9 @@
 <?php
 require_once '../config/config.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Set content type to JSON
 header('Content-Type: application/json');
 
@@ -63,7 +66,7 @@ try {
     if ($stmt->rowCount() > 0) {
         // Delete associated image file if it exists and is not default
         if ($post['image_url'] && $post['image_url'] !== 'default.jpg') {
-            $image_path = '../assets/images/' . $post['image_url'];
+            $image_path = '../assets/uploads/' . $post['image_url'];
             if (file_exists($image_path)) {
                 unlink($image_path);
             }
@@ -87,4 +90,3 @@ try {
     $pdo->rollback();
     echo json_encode(['success' => false, 'message' => 'Database error occurred']);
 }
-?>

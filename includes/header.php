@@ -29,6 +29,11 @@ function renderHeader($pageTitle = 'SocialHub - Connect with Friends', $currentP
             <link href="<?php echo htmlspecialchars($css); ?>" rel="stylesheet">
         <?php endforeach; ?>
 
+        <!-- Additional JS -->
+        <?php foreach ($additionalJS as $js): ?>
+            <script src="<?php echo htmlspecialchars($js); ?>"></script>
+        <?php endforeach; ?>
+
         <!-- Meta tags for SEO -->
         <meta name="description" content="SocialHub - Connect, share, and explore with friends from around the world.">
         <meta name="keywords" content="social media, connect, share, friends, community">
@@ -71,7 +76,7 @@ function renderHeader($pageTitle = 'SocialHub - Connect with Friends', $currentP
                 </ul>
 
                 <!-- Search Bar -->
-                <form class="d-flex me-3" onsubmit="searchUsers(event)">
+                <form class="d-flex me-3" id="searchForm">
                     <input class="form-control" type="search" id="searchInput" placeholder="Search users..." aria-label="Search">
                     <button class="btn btn-outline-light" type="submit">
                         <i class="fas fa-search"></i>

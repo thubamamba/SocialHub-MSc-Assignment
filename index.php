@@ -3,6 +3,9 @@ require_once 'config/config.php';
 require_once 'includes/header.php';
 require_once 'includes/footer.php';
 
+// Ensure $pdo is available globally
+global $pdo;
+
 // Handle login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = sanitizeInput($_POST['username']);
@@ -55,7 +58,8 @@ if (isset($_SESSION['error_messages'])) {
 $stmt = $pdo->prepare("
     SELECT p.*, u.username, u.profile_picture,
            (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as likes_count,
-           (SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?) as user_liked
+           (SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?) as user_liked,
+           (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comments_count
     FROM posts p 
     JOIN users u ON p.user_id = u.id 
     ORDER BY p.created_at DESC
@@ -135,21 +139,21 @@ startPage('SocialHub - Connect with Friends', 'home');
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="https://picsum.photos/800/400?random=1" class="d-block w-100" alt="Random Picsum Image">
+                        <img src="assets/images/connect2.jpg" class="d-block w-100" alt="Connect with Friends">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Welcome to SocialHub</h5>
                             <p>Connect, share, and explore with friends from around the world.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="https://picsum.photos/800/400?random=2" class="d-block w-100" alt="Random Picsum Image">
+                        <img src="assets/images/happy.jpg" class="d-block w-100" alt="Happy Image">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Share Your Moments</h5>
                             <p>Upload photos and share your experiences with your community.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="https://picsum.photos/800/400?random=3" class="d-block w-100" alt="Random Picsum Image">
+                        <img src="assets/images/connect.jpg" class="d-block w-100" alt="Connect with People">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Discover New Connections</h5>
                             <p>Find and connect with people who share your interests.</p>
@@ -166,7 +170,7 @@ startPage('SocialHub - Connect with Friends', 'home');
                 </button>
             </div>
 
-            <!-- Create Post (Only for logged in users) -->
+            <!-- Create Post (Only for logged-in users) -->
             <?php if (isLoggedIn()): ?>
                 <div class="card mb-4">
                     <div class="card-body">
@@ -235,13 +239,12 @@ startPage('SocialHub - Connect with Friends', 'home');
                                     <?php endif; ?>
 
                                     <button class="btn btn-link p-0" onclick="toggleComments(<?php echo $post['id']; ?>)">
-                                        <i class="fas fa-comment"></i> Comments
+                                        <i class="fas fa-comment"></i> <span class="comments-count"><?php echo $post['comments_count']; ?></span>
                                     </button>
                                 </div>
                             </div>
 
                             <!-- Comments Section -->
-
                             <div class="comments-section mt-3" id="comments-<?php echo $post['id']; ?>" style="display: none;">
                                 <div class="comments-list">
                                     <?php

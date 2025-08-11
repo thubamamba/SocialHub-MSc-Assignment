@@ -41,7 +41,7 @@ function renderCommonModals() {
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to logout?
+                    Are you sure you want to log-out?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -157,21 +157,6 @@ function renderFooter($additionalJS = []) {
     <?php foreach ($additionalJS as $js): ?>
         <script src="<?php echo htmlspecialchars($js); ?>"></script>
     <?php endforeach; ?>
-
-    <!-- TODO: Remove this - Performance and Analytics (Optional) -->
-    <script>
-        // Performance monitoring
-        if ('performance' in window) {
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    if (perfData && console) {
-                        console.log('Page load time:', Math.round(perfData.loadEventEnd - perfData.fetchStart), 'ms');
-                    }
-                }, 0);
-            });
-        }
-    </script>
     </body>
     </html>
     <?php
@@ -181,7 +166,7 @@ function renderFooter($additionalJS = []) {
  * Quick helper function to include both header and handle session messages
  */
 function startPage($pageTitle = 'SocialHub', $currentPage = 'home', $additionalCSS = [], $additionalJS = []) {
-    renderHeader($pageTitle, $currentPage, $additionalCSS, $additionalJS);
+    renderHeader($pageTitle, $currentPage, $additionalCSS);
     echo '<div class="container-fluid mt-5 pt-4">';
     renderSessionMessages();
 }

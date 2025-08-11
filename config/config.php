@@ -1,13 +1,42 @@
 <?php
-// Database configuration for MAMP
-define('DB_HOST', 'localhost:8889'); // Note the port 8889
-define('DB_NAME', 'social_media_db');
-define('DB_USER', 'root');
-define('DB_PASS', 'root'); // MAMP default password is 'root'
+// Load environment variables from .env file
+$dotenv = parse_ini_file(__DIR__ . '/../.env');
+if ($dotenv === false) {
+    die('Error: .env file not found or not readable. Please copy .env.example to .env and configure your settings.');
+}
 
-// Alternative connection string for MAMP
+// Set error reporting based on environment
+if (($dotenv['APP_ENV'] ?? 'production') === 'development') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+}
+
+// Database configuration from environment variables
+define('DB_HOST', $dotenv['DB_HOST'] ?? 'localhost:8889');
+define('DB_NAME', $dotenv['DB_NAME'] ?? 'social_media_db');
+define('DB_USER', $dotenv['DB_USER'] ?? 'root');
+define('DB_PASS', $dotenv['DB_PASS'] ?? 'root');
+
+// Database connection
 try {
-    $pdo = new PDO("mysql:host=localhost;port=8889;dbname=" . DB_NAME, DB_USER, DB_PASS);
+    // Parse host and port if port is included in DB_HOST
+    $hostParts = explode(':', DB_HOST);
+    $host = $hostParts[0];
+    $port = $hostParts[1] ?? '3306'; // Default MySQL port if not specified
+
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=" . DB_NAME . ";charset=utf8mb4",
+        DB_USER,
+        DB_PASS,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]
+    );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
@@ -33,27 +62,6 @@ function getCurrentUser($pdo) {
     return $stmt->fetch();
 }
 
-// Function to get any user by ID
-function getUser($pdo, $user_id) {
-    if (!$user_id) {
-        return null;
-    }
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    return $stmt->fetch();
-}
-
-// Function to get user by username
-function getUserByUsername($pdo, $username) {
-    if (!$username) {
-        return null;
-    }
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    return $stmt->fetch();
-}
 // Function to sanitize input
 function sanitizeInput($input) {
     return htmlspecialchars(strip_tags(trim($input)));
@@ -63,5 +71,3 @@ function sanitizeInput($input) {
 function formatDate($date) {
     return date('M j, Y g:i A', strtotime($date));
 }
-?>
-
