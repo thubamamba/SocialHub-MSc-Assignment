@@ -32,24 +32,26 @@ BEGIN HomePage
         - JOIN posts with users table
         - COUNT likes for each post
         - COUNT comments for each post  
-        - CHECK if current user has liked each post
+        - CHECK if current user has liked each post (if logged in)
         - ORDER by creation date descending
     
     GET current user data if logged in
     
     DISPLAY page structure:
+        SHOW carousel with featured images for all users
+        SHOW posts feed with all retrieved posts for all users
+        SHOW search bar in navigation (available to all users)
+        
         IF user is logged in THEN
             SHOW left sidebar with user profile summary
             SHOW post creation form in main feed
             SHOW interactive like/comment buttons on posts
+            SHOW right sidebar with suggested users
         ELSE
-            HIDE user-specific elements
+            HIDE user-specific elements (post creation, sidebars)
             SHOW login modal and register link
+            SHOW posts in read-only mode
         END IF
-        
-        SHOW carousel with featured images
-        SHOW posts feed with all retrieved posts
-        SHOW right sidebar with suggested users
         
     FOR each post in posts feed:
         DISPLAY post content and image if present
@@ -62,15 +64,18 @@ BEGIN HomePage
             IF user owns post OR user is moderator THEN
                 SHOW delete option
             END IF
+        ELSE
+            SHOW like/comment counts as read-only text
+            DISPLAY comments but no interaction forms
         END IF
     END FOR
     
     INCLUDE JavaScript for:
-        - Theme switching functionality
-        - AJAX like/unlike operations
-        - Comment adding/deleting
-        - Post deletion with confirmation
-        - User search functionality
+        - Theme switching functionality (all users)
+        - User search functionality (all users)
+        - AJAX like/unlike operations (logged in only)
+        - Comment adding/deleting (logged in only)
+        - Post deletion with confirmation (logged in only)
 END HomePage
 ```
 
@@ -163,12 +168,12 @@ BEGIN ProfilePage
     QUERY database for user profile data
     IF user not found THEN REDIRECT to home page
     
-    CHECK if viewing own profile (user_id matches session)
+    CHECK if viewing own profile (user_id matches session if logged in)
     
     QUERY database for user's posts with interaction counts:
         - GET all posts by this user
         - COUNT likes and comments for each post
-        - CHECK if current viewer has liked posts
+        - CHECK if current viewer has liked posts (if logged in)
         - ORDER by creation date descending
     
     CALCULATE user statistics:
@@ -176,16 +181,16 @@ BEGIN ProfilePage
         - COUNT total likes received on user's posts  
         - COUNT total comments received on user's posts
     
-    GET current logged-in user data
+    GET current logged-in user data (if any)
     
     DISPLAY profile information:
-        - Profile picture with edit option if own profile
+        - Profile picture 
         - Username and user level badge
         - Bio text if present
         - Join date
         - Statistics (posts, likes, comments)
         
-        IF own profile THEN
+        IF logged in AND own profile THEN
             SHOW "Edit Profile" button
             SHOW post creation form
         END IF
@@ -204,13 +209,20 @@ BEGIN ProfilePage
                     IF viewer owns post OR viewer is moderator THEN
                         SHOW delete option
                     END IF
+                ELSE
+                    SHOW like/comment counts as read-only text
+                    SHOW existing comments but no interaction forms
                 END IF
             END FOR
         ELSE
-            SHOW "No posts yet" message
+            IF own profile THEN
+                SHOW "Share your first post to get started!"
+            ELSE
+                SHOW "User hasn't shared any posts yet"
+            END IF
         END IF
     
-    IF own profile THEN
+    IF logged in AND own profile THEN
         SHOW edit profile modal with:
             - Profile picture upload with preview
             - Bio text area
@@ -218,10 +230,10 @@ BEGIN ProfilePage
     END IF
     
     INCLUDE JavaScript for:
-        - Post interactions (like, comment, delete)
-        - Comment management
-        - Image preview for profile updates
-        - Modal handling
+        - Post interactions (like, comment, delete) - logged in users only
+        - Comment management - logged in users only
+        - Image preview for profile updates - own profile only
+        - Modal handling - all users
 END ProfilePage
 ```
 
@@ -486,6 +498,9 @@ BEGIN SearchUsers
     
     FORMAT results with user information and safety
     RETURN JSON with success, users array, and count
+    
+    NOTE: This endpoint is available to all users (no login required)
+    Allows guest users to discover and find profiles to view
 END SearchUsers
 ```
 
@@ -493,7 +508,7 @@ END SearchUsers
 
 ## Summary
 
-This pseudocode documentation covers the complete functionality of each page and API endpoint in the SynCNet social media platform, demonstrating the following:
+This pseudocode documentation covers the complete functionality of each page and API endpoint in the SynCNet social media platform, demonstrating broadly the following key features:
 
 - **User authentication and authorization**
 - **Content creation and management**
@@ -502,5 +517,3 @@ This pseudocode documentation covers the complete functionality of each page and
 - **Database operations and validation**
 - **Security measures and error handling**
 - **Responsive user interface considerations**
-
-Each function includes proper validation, error handling, and security measures essential for a production social media application.
