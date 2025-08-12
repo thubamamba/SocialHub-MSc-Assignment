@@ -130,7 +130,7 @@ function renderFooter($additionalJS = []) {
             <hr class="my-4">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="text-body-secondary mb-0">&copy; <?php echo date('Y'); ?> SynCNet. All rights reserved.</p>
+                    <p class="text-body-secondary mb-0">&copy; <?php echo date('Y'); ?> SynCNet. All rights reserved. Built by <a href="https://thubamamba.com"target="_blank" class="text-body-secondary text-decoration-none">Thuba Mamba</a>.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="btn-group btn-group-sm" role="group">

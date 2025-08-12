@@ -1,6 +1,6 @@
 <?php
 require_once 'config/config.php';
-
+require_once 'helpers/api_helpers.php';
 // Ensure $pdo is available globally
 global $pdo;
 
@@ -74,7 +74,7 @@ if (empty($errors)) {
     $sanitized_content = sanitizeInput($content);
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO posts (user_id, content, image_url) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO " . getTableName('posts') . " (user_id, content, image_url) VALUES (?, ?, ?)");
         $stmt->execute([$user_id, $sanitized_content, $image_url]);
 
         // Set success message in session

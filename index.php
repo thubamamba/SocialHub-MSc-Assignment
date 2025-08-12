@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $username = sanitizeInput($_POST['username']);
     $password = $_POST['password'];
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+    $stmt = $pdo->prepare("SELECT * FROM " . getTableName('users') . " WHERE username = ? OR email = ?");
     $stmt->execute([$username, $username]);
     $user = $stmt->fetch();
 
@@ -57,11 +57,11 @@ if (isset($_SESSION['error_messages'])) {
 // Get posts for feed
 $stmt = $pdo->prepare("
     SELECT p.*, u.username, u.profile_picture,
-           (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as likes_count,
-           (SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?) as user_liked,
-           (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comments_count
-    FROM posts p 
-    JOIN users u ON p.user_id = u.id 
+           (SELECT COUNT(*) FROM " . getTableName('likes') . " WHERE post_id = p.id) as likes_count,
+           (SELECT COUNT(*) FROM " . getTableName('likes') . " WHERE post_id = p.id AND user_id = ?) as user_liked,
+           (SELECT COUNT(*) FROM " . getTableName('comments') . " WHERE post_id = p.id) as comments_count
+    FROM " . getTableName('posts') . " p 
+    JOIN " . getTableName('users') . " u ON p.user_id = u.id 
     ORDER BY p.created_at DESC
 ");
 $stmt->execute([isLoggedIn() ? $_SESSION['user_id'] : 0]);
@@ -250,8 +250,8 @@ startPage('SynCNet - Connect with Friends', 'home');
                                     <?php
                                     $stmt = $pdo->prepare("
                                         SELECT c.*, u.username, u.profile_picture 
-                                        FROM comments c 
-                                        JOIN users u ON c.user_id = u.id 
+                                        FROM " . getTableName('comments') . " c 
+                                        JOIN " . getTableName('users') . " u ON c.user_id = u.id 
                                         WHERE c.post_id = ? 
                                         ORDER BY c.created_at ASC
                                     ");
@@ -312,7 +312,7 @@ startPage('SynCNet - Connect with Friends', 'home');
                 </div>
                 <div class="card-body">
                     <?php
-                    $stmt = $pdo->prepare("SELECT * FROM users ORDER BY created_at DESC LIMIT 5");
+                    $stmt = $pdo->prepare("SELECT * FROM " . getTableName('users') . " ORDER BY created_at DESC LIMIT 5");
                     $stmt->execute();
                     $suggested_users = $stmt->fetchAll();
 

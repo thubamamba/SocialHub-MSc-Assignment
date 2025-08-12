@@ -33,7 +33,7 @@ $user_level = $_SESSION['user_level'];
 
 try {
     // Get post info to check ownership and get image path
-    $stmt = $pdo->prepare("SELECT user_id, image_url FROM posts WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT user_id, image_url FROM " . getTableName('posts') . " WHERE id = ?");
     $stmt->execute([$post_id]);
     $post = $stmt->fetch();
 
@@ -52,15 +52,15 @@ try {
     $pdo->beginTransaction();
 
     // Delete related likes first
-    $stmt = $pdo->prepare("DELETE FROM likes WHERE post_id = ?");
+    $stmt = $pdo->prepare("DELETE FROM " . getTableName('likes') . " WHERE post_id = ?");
     $stmt->execute([$post_id]);
 
     // Delete related comments
-    $stmt = $pdo->prepare("DELETE FROM comments WHERE post_id = ?");
+    $stmt = $pdo->prepare("DELETE FROM " . getTableName('comments') . " WHERE post_id = ?");
     $stmt->execute([$post_id]);
 
     // Delete the post
-    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM " . getTableName('posts') . " WHERE id = ?");
     $stmt->execute([$post_id]);
 
     if ($stmt->rowCount() > 0) {

@@ -26,7 +26,7 @@ if (strlen($bio) > 500) {
 }
 
 // Get current user data
-$stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT profile_picture FROM " . getTableName('users') . " WHERE id = ?");
 $stmt->execute([$user_id]);
 $current_user = $stmt->fetch();
 
@@ -94,7 +94,7 @@ if (empty($errors)) {
     $sanitized_bio = sanitizeInput($bio);
 
     try {
-        $stmt = $pdo->prepare("UPDATE users SET bio = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE " . getTableName('users') . " SET bio = ?, profile_picture = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
         $stmt->execute([$sanitized_bio, $profile_picture, $user_id]);
 
         // Set success message in session

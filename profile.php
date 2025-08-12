@@ -15,7 +15,7 @@ if (!$user_id) {
 }
 
 // Get user data
-$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM " . getTableName('users') . " WHERE id = ?");
 $stmt->execute([$user_id]);
 $profile_user = $stmt->fetch();
 
@@ -33,10 +33,10 @@ $pageTitle = htmlspecialchars($profile_user['username']) . '\'s Profile - SynCNe
 // Get user's posts
 $stmt = $pdo->prepare("
     SELECT p.*, 
-           (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as likes_count,
-           (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comments_count,
-           (SELECT COUNT(*) FROM likes WHERE post_id = p.id AND user_id = ?) as user_liked
-    FROM posts p 
+           (SELECT COUNT(*) FROM " . getTableName('likes') . " WHERE post_id = p.id) as likes_count,
+           (SELECT COUNT(*) FROM " . getTableName('comments') . " WHERE post_id = p.id) as comments_count,
+           (SELECT COUNT(*) FROM " . getTableName('likes') . " WHERE post_id = p.id AND user_id = ?) as user_liked
+    FROM " . getTableName('posts') . " p 
     WHERE p.user_id = ? 
     ORDER BY p.created_at DESC
 ");
@@ -44,15 +44,15 @@ $stmt->execute([isLoggedIn() ? $_SESSION['user_id'] : 0, $user_id]);
 $user_posts = $stmt->fetchAll();
 
 // Get user statistics
-$stmt = $pdo->prepare("SELECT COUNT(*) as post_count FROM posts WHERE user_id = ?");
+$stmt = $pdo->prepare("SELECT COUNT(*) as post_count FROM " . getTableName('posts') . " WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $post_count = $stmt->fetch()['post_count'];
 
-$stmt = $pdo->prepare("SELECT COUNT(*) as total_likes FROM likes l JOIN posts p ON l.post_id = p.id WHERE p.user_id = ?");
+$stmt = $pdo->prepare("SELECT COUNT(*) as total_likes FROM " . getTableName('likes') . " l JOIN " . getTableName('posts') . " p ON l.post_id = p.id WHERE p.user_id = ?");
 $stmt->execute([$user_id]);
 $total_likes = $stmt->fetch()['total_likes'];
 
-$stmt = $pdo->prepare("SELECT COUNT(*) as total_comments FROM comments c JOIN posts p ON c.post_id = p.id WHERE p.user_id = ?");
+$stmt = $pdo->prepare("SELECT COUNT(*) as total_comments FROM " . getTableName('comments') . " c JOIN " . getTableName('posts') . " p ON c.post_id = p.id WHERE p.user_id = ?");
 $stmt->execute([$user_id]);
 $total_comments = $stmt->fetch()['total_comments'];
 
@@ -233,8 +233,8 @@ startPage($pageTitle, 'profile');
                                     <?php
                                     $stmt = $pdo->prepare("
                                         SELECT c.*, u.username, u.profile_picture 
-                                        FROM comments c 
-                                        JOIN users u ON c.user_id = u.id 
+                                        FROM " . getTableName('comments') . " c 
+                                        JOIN " . getTableName('users') . " u ON c.user_id = u.id 
                                         WHERE c.post_id = ? 
                                         ORDER BY c.created_at ASC
                                     ");

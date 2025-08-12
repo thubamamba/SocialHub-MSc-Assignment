@@ -31,7 +31,7 @@ try {
     $search_term = '%' . $query . '%';
     $stmt = $pdo->prepare("
         SELECT id, username, bio, profile_picture, user_level, created_at
-        FROM users 
+        FROM " . getTableName('users') . " 
         WHERE username LIKE ? OR bio LIKE ?
         ORDER BY 
             CASE 

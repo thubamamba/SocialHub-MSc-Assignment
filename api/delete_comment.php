@@ -33,7 +33,7 @@ $user_level = $_SESSION['user_level'];
 
 try {
     // Get comment info to check ownership
-    $stmt = $pdo->prepare("SELECT user_id FROM comments WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT user_id FROM " . getTableName('comments') . " WHERE id = ?");
     $stmt->execute([$comment_id]);
     $comment = $stmt->fetch();
 
@@ -49,7 +49,7 @@ try {
     }
 
     // Delete the comment
-    $stmt = $pdo->prepare("DELETE FROM comments WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM " . getTableName('comments') . " WHERE id = ?");
     $stmt->execute([$comment_id]);
 
     if ($stmt->rowCount() > 0) {

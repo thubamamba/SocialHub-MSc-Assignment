@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if username or email already exists
     if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $stmt = $pdo->prepare("SELECT id FROM " . getTableName('users') . " WHERE username = ? OR email = ?");
         $stmt->execute([$username, $email]);
         if ($stmt->fetch()) {
             $errors[] = "Username or email already exists.";
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, user_level, bio, profile_picture) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO " . getTableName('users') . " (username, email, password_hash, user_level, bio, profile_picture) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$username, $email, $password_hash, $user_level, $bio, $profile_picture]);
 
             $success = true;

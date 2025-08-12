@@ -41,7 +41,7 @@ if (strlen($content) > 500) {
 }
 
 // Check if post exists
-$stmt = $pdo->prepare("SELECT id FROM posts WHERE id = ?");
+$stmt = $pdo->prepare("SELECT id FROM " . getTableName('posts') . " WHERE id = ?");
 $stmt->execute([$post_id]);
 if (!$stmt->fetch()) {
     echo json_encode(['success' => false, 'message' => 'Post not found']);
@@ -53,7 +53,7 @@ $sanitized_content = sanitizeInput($content);
 
 try {
     // Insert comment
-    $stmt = $pdo->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO " . getTableName('comments') . " (post_id, user_id, content) VALUES (?, ?, ?)");
     $stmt->execute([$post_id, $user_id, $sanitized_content]);
 
     $comment_id = $pdo->lastInsertId();
@@ -61,8 +61,8 @@ try {
     // Get comment data with user info
     $stmt = $pdo->prepare("
         SELECT c.*, u.username, u.profile_picture 
-        FROM comments c 
-        JOIN users u ON c.user_id = u.id 
+        FROM " . getTableName('comments') . " c 
+        JOIN " . getTableName('users') . " u ON c.user_id = u.id 
         WHERE c.id = ?
     ");
     $stmt->execute([$comment_id]);

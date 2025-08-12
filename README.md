@@ -444,7 +444,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Bootstrap team for the responsive framework
 - Font Awesome for the icon library
 - PHP community for excellent documentation
-- All contributors who help improve this project
 
 ## 📞 Support
 

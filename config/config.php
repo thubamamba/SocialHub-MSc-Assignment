@@ -6,7 +6,7 @@ if ($dotenv === false) {
 }
 
 // Set error reporting based on environment
-if (($dotenv['APP_ENV'] ?? 'production') === 'development') {
+if (($dotenv['APP_ENV'] ?? 'development') === 'development') {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 } else {
@@ -14,11 +14,12 @@ if (($dotenv['APP_ENV'] ?? 'production') === 'development') {
     ini_set('display_errors', 0);
 }
 
-// Database configuration from environment variables
+// Configuration from environment variables
 define('DB_HOST', $dotenv['DB_HOST'] ?? 'localhost:8889');
 define('DB_NAME', $dotenv['DB_NAME'] ?? 'social_media_db');
 define('DB_USER', $dotenv['DB_USER'] ?? 'root');
 define('DB_PASS', $dotenv['DB_PASS'] ?? 'root');
+define('APP_ENV', $dotenv['APP_ENV'] ?? 'development');
 
 // Database connection
 try {
@@ -51,13 +52,21 @@ function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
+// Function to get table name for different environments
+function getTableName($table) {
+    if (APP_ENV === 'production') {
+        return 'syncnet_' . $table;
+    }
+    return $table; // Keep original names for development
+}
+
 // Function to get current user data
 function getCurrentUser($pdo) {
     if (!isLoggedIn()) {
         return null;
     }
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM " . getTableName('users') . " WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     return $stmt->fetch();
 }
