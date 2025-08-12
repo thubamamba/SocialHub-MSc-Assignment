@@ -98,8 +98,86 @@ startPage('SynCNet - Connect with Friends', 'home');
         </div>
     <?php endif; ?>
 
+    <!-- Mobile Navigation for Sidebars - Only on small screens -->
+    <div class="row d-lg-none mb-3">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <?php if (isLoggedIn()): ?>
+                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#mobileProfile">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                <?php endif; ?>
+                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#mobileTrending">
+                    <i class="fas fa-fire"></i> Trending
+                </button>
+                <button class="btn btn-outline-info btn-sm" data-bs-toggle="collapse" data-bs-target="#mobileSuggested">
+                    <i class="fas fa-users"></i> Suggested
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Collapsible Sections - Only on small screens -->
+    <?php if (isLoggedIn()): ?>
+        <div class="collapse d-lg-none mb-3" id="mobileProfile">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="assets/uploads/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>"
+                         alt="Profile" class="profile-img-small mb-2">
+                    <h6><?php echo htmlspecialchars($currentUser['username']); ?></h6>
+                    <p class="text-muted small"><?php echo htmlspecialchars($currentUser['bio']); ?></p>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="collapse d-lg-none mb-3" id="mobileTrending">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-fire"></i> Trending Topics</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary">#BeachLife</span>
+                    <span class="badge bg-primary">#Photography</span>
+                    <span class="badge bg-primary">#Nature</span>
+                    <span class="badge bg-primary">#Sunset</span>
+                    <span class="badge bg-primary">#Hiking</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="collapse d-lg-none mb-3" id="mobileSuggested">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-users"></i> Suggested Users</h6>
+            </div>
+            <div class="card-body">
+                <?php
+                $stmt = $pdo->prepare("SELECT * FROM " . getTableName('users') . " ORDER BY created_at DESC LIMIT 3");
+                $stmt->execute();
+                $mobile_suggested_users = $stmt->fetchAll();
+
+                foreach ($mobile_suggested_users as $user):
+                    ?>
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="assets/uploads/<?php echo htmlspecialchars($user['profile_picture']); ?>"
+                             alt="Profile" class="profile-img-tiny me-2">
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small"><?php echo htmlspecialchars($user['username']); ?></div>
+                        </div>
+                        <a href="profile.php?id=<?php echo $user['id']; ?>" class="btn btn-xs btn-outline-primary">
+                            View
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <!-- Left Sidebar (hidden on mobile) -->
+        <!-- Left Sidebar - Hidden on mobile, shown on tablet+ -->
         <div class="col-lg-3 d-none d-lg-block">
             <div class="sidebar">
                 <?php if (isLoggedIn()): ?>
@@ -128,9 +206,9 @@ startPage('SynCNet - Connect with Friends', 'home');
             </div>
         </div>
 
-        <!-- Main Feed -->
-        <div class="col-lg-6 col-md-8">
-            <!-- Bootstrap Carousel -->
+        <!-- Main Feed - Responsive width based on screen size -->
+        <div class="col-12 col-lg-6 col-xl-6">
+            <!-- Bootstrap Carousel - Smaller on mobile -->
             <div id="featuredCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="0" class="active"></button>
@@ -139,21 +217,21 @@ startPage('SynCNet - Connect with Friends', 'home');
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="assets/images/connect2.jpg" class="d-block w-100" alt="Connect with Friends">
+                        <img src="assets/images/connect2.jpg" class="d-block w-100" alt="Connect with Friends" style="height: 250px; object-fit: cover;">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Welcome to SynCNet</h5>
                             <p>Connect, share, and explore with friends from around the world.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="assets/images/happy.jpg" class="d-block w-100" alt="Happy Image">
+                        <img src="assets/images/happy.jpg" class="d-block w-100" alt="Happy Image" style="height: 250px; object-fit: cover;">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Share Your Moments</h5>
                             <p>Upload photos and share your experiences with your community.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <img src="assets/images/connect.jpg" class="d-block w-100" alt="Connect with People">
+                        <img src="assets/images/connect.jpg" class="d-block w-100" alt="Connect with People" style="height: 250px; object-fit: cover;">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Discover New Connections</h5>
                             <p>Find and connect with people who share your interests.</p>
@@ -181,7 +259,7 @@ startPage('SynCNet - Connect with Friends', 'home');
                             <div class="mb-3">
                                 <input type="file" class="form-control" name="image" accept="image/*">
                             </div>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary w-100 w-md-auto">
                                 <i class="fas fa-share"></i> Share Post
                             </button>
                         </form>
@@ -195,7 +273,8 @@ startPage('SynCNet - Connect with Friends', 'home');
                     <div class="card mb-4 post-card" data-post-id="<?php echo $post['id']; ?>">
                         <div class="card-header d-flex align-items-center">
                             <img src="assets/uploads/<?php echo htmlspecialchars($post['profile_picture']); ?>"
-                                 alt="Profile" class="profile-img-tiny me-2">
+                                 alt="Profile" class="profile-img-tiny me-2"
+                                 onerror="this.src='assets/images/default.jpg'">
                             <div class="flex-grow-1">
                                 <a href="profile.php?id=<?php echo $post['user_id']; ?>" class="fw-bold text-decoration-none">
                                     <?php echo htmlspecialchars($post['username']); ?>
@@ -220,15 +299,16 @@ startPage('SynCNet - Connect with Friends', 'home');
                             <p class="card-text"><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
                             <?php if ($post['image_url']): ?>
                                 <img src="assets/uploads/<?php echo htmlspecialchars($post['image_url']); ?>"
-                                     class="img-fluid rounded mb-3" alt="Post image">
+                                     class="img-fluid rounded mb-3" alt="Post image"
+                                     onerror="this.src='assets/images/default.jpg'">
                             <?php endif; ?>
                         </div>
 
                         <div class="card-footer">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex gap-3">
                                     <?php if (isLoggedIn()): ?>
-                                        <button class="btn btn-link p-0 me-3 like-btn <?php echo $post['user_liked'] ? 'liked' : ''; ?>"
+                                        <button class="btn btn-link p-0 like-btn <?php echo $post['user_liked'] ? 'liked' : ''; ?>"
                                                 onclick="toggleLike(<?php echo $post['id']; ?>)">
                                             <i class="fas fa-heart"></i> <span class="likes-count"><?php echo $post['likes_count']; ?></span>
                                         </button>
@@ -242,6 +322,10 @@ startPage('SynCNet - Connect with Friends', 'home');
                                         <i class="fas fa-comment"></i> <span class="comments-count"><?php echo $post['comments_count']; ?></span>
                                     </button>
                                 </div>
+
+                                <button class="btn btn-link p-0 text-muted btn-sm" onclick="copyToClipboard(window.location.origin + '/profile.php?id=<?php echo $post['user_id']; ?>&post=<?php echo $post['id']; ?>')">
+                                    <i class="fas fa-share"></i> <span class="d-none d-sm-inline">Share</span>
+                                </button>
                             </div>
 
                             <!-- Comments Section -->
@@ -249,12 +333,12 @@ startPage('SynCNet - Connect with Friends', 'home');
                                 <div class="comments-list">
                                     <?php
                                     $stmt = $pdo->prepare("
-                                        SELECT c.*, u.username, u.profile_picture 
-                                        FROM " . getTableName('comments') . " c 
-                                        JOIN " . getTableName('users') . " u ON c.user_id = u.id 
-                                        WHERE c.post_id = ? 
-                                        ORDER BY c.created_at ASC
-                                    ");
+                                    SELECT c.*, u.username, u.profile_picture 
+                                    FROM " . getTableName('comments') . " c 
+                                    JOIN " . getTableName('users') . " u ON c.user_id = u.id 
+                                    WHERE c.post_id = ? 
+                                    ORDER BY c.created_at ASC
+                                ");
                                     $stmt->execute([$post['id']]);
                                     $comments = $stmt->fetchAll();
 
@@ -268,10 +352,15 @@ startPage('SynCNet - Connect with Friends', 'home');
                                             <div class="comment mb-2" data-comment-id="<?php echo $comment['id']; ?>">
                                                 <div class="d-flex">
                                                     <img src="assets/uploads/<?php echo htmlspecialchars($comment['profile_picture']); ?>"
-                                                         alt="Profile" class="profile-img-tiny me-2">
+                                                         alt="Profile" class="profile-img-tiny me-2"
+                                                         onerror="this.src='assets/images/default.jpg'">
                                                     <div class="flex-grow-1">
                                                         <div class="comment-content">
-                                                            <strong><?php echo htmlspecialchars($comment['username']); ?></strong>
+                                                            <strong>
+                                                                <a href="profile.php?id=<?php echo $comment['user_id']; ?>" class="text-decoration-none">
+                                                                    <?php echo htmlspecialchars($comment['username']); ?>
+                                                                </a>
+                                                            </strong>
                                                             <?php echo htmlspecialchars($comment['content']); ?>
                                                         </div>
                                                         <small class="text-muted"><?php echo formatDate($comment['created_at']); ?></small>
@@ -290,8 +379,8 @@ startPage('SynCNet - Connect with Friends', 'home');
                                 <?php if (isLoggedIn()): ?>
                                     <form class="mt-3" onsubmit="addComment(event, <?php echo $post['id']; ?>)">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Write a comment..." required>
-                                            <button class="btn btn-primary" type="submit">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Write a comment..." required>
+                                            <button class="btn btn-primary btn-sm" type="submit">
                                                 <i class="fas fa-paper-plane"></i>
                                             </button>
                                         </div>
@@ -304,7 +393,7 @@ startPage('SynCNet - Connect with Friends', 'home');
             </div>
         </div>
 
-        <!-- Right Sidebar (hidden on mobile) -->
+        <!-- Right Sidebar - Hidden on mobile/small tablet, shown on large tablet+ -->
         <div class="col-lg-3 d-none d-lg-block">
             <div class="card">
                 <div class="card-header">
@@ -320,7 +409,8 @@ startPage('SynCNet - Connect with Friends', 'home');
                         ?>
                         <div class="d-flex align-items-center mb-3">
                             <img src="assets/uploads/<?php echo htmlspecialchars($user['profile_picture']); ?>"
-                                 alt="Profile" class="profile-img-tiny me-2">
+                                 alt="Profile" class="profile-img-tiny me-2"
+                                 onerror="this.src='assets/images/default.jpg'">
                             <div class="flex-grow-1">
                                 <div class="fw-bold"><?php echo htmlspecialchars($user['username']); ?></div>
                                 <small class="text-muted">Joined <?php echo date('M Y', strtotime($user['created_at'])); ?></small>
